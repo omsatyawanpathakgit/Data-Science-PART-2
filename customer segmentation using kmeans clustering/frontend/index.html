@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f2">
+  <title>Customer Atlas — Find your customer segment</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17251f;
+      --muted: #748078;
+      --green: #236b4f;
+      --green-dark: #153e30;
+      --lime: #d1f28f;
+      --paper: #f1f3ee;
+      --line: #e7ebe4;
+      --white: #fff;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 28px;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 7% 10%, rgba(197, 225, 165, .3), transparent 30%),
+        radial-gradient(ellipse at 96% 88%, rgba(56, 131, 98, .13), transparent 32%),
+        radial-gradient(rgba(35, 77, 56, .05) .7px, transparent .7px),
+        var(--paper);
+      background-size: auto, auto, 16px 16px, auto;
+    }
+
+    .page {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 2px 30px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 15px;
+      font-weight: 750;
+      letter-spacing: -.03em;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 12px;
+      color: var(--lime);
+      background: var(--green-dark);
+      font-size: 19px;
+      box-shadow: 0 6px 14px rgba(21, 62, 48, .2);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #5bab78;
+      content: "";
+    }
+
+    main {
+      overflow: hidden;
+      border: 1px solid rgba(225, 231, 223, .9);
+      border-radius: 30px;
+      background: var(--white);
+      box-shadow: 0 32px 90px rgba(35, 56, 44, .11), 0 4px 12px rgba(35, 56, 44, .04);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      min-height: 318px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+      align-items: center;
+      gap: 30px;
+      padding: 48px 64px;
+      color: var(--white);
+      background:
+        radial-gradient(ellipse at 82% 12%, rgba(209, 242, 143, .19), transparent 28%),
+        radial-gradient(ellipse at 94% 100%, rgba(90, 168, 119, .25), transparent 35%),
+        linear-gradient(115deg, #153e30 0%, #1d5940 58%, #286a4c 100%);
+    }
+
+    .hero::after {
+      position: absolute;
+      top: -185px;
+      right: 17%;
+      width: 430px;
+      height: 430px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 50%;
+      box-shadow: 0 0 0 38px rgba(255, 255, 255, .025), 0 0 0 78px rgba(255, 255, 255, .02);
+      content: "";
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 19px;
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      padding: 8px 12px;
+      border: 1px solid rgba(209, 242, 143, .22);
+      border-radius: 999px;
+      background: rgba(209, 242, 143, .08);
+      letter-spacing: .11em;
+    }
+
+    .eyebrow::before {
+      width: 19px;
+      height: 1px;
+      background: currentColor;
+      content: "";
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 6vw, 60px);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: 1.04;
+    }
+
+    h1 span {
+      color: var(--lime);
+      font-style: italic;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 18px 0 0;
+      color: rgba(255, 255, 255, .75);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .hero-art {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      min-height: 220px;
+      place-items: center;
+    }
+
+    .orbit {
+      position: absolute;
+      width: 210px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 50%;
+      box-shadow: 0 0 0 25px rgba(255, 255, 255, .035), 0 0 0 51px rgba(255, 255, 255, .025);
+    }
+
+    .scatter-card {
+      position: relative;
+      width: min(100%, 275px);
+      padding: 19px 19px 16px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 18px;
+      background: rgba(248, 252, 246, .1);
+      box-shadow: 0 18px 50px rgba(8, 31, 22, .2);
+      backdrop-filter: blur(12px);
+      transform: rotate(2deg);
+    }
+
+    .scatter-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      color: rgba(255, 255, 255, .8);
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    .scatter-tag {
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: var(--lime);
+      background: rgba(209, 242, 143, .12);
+      font-size: 9px;
+      letter-spacing: .04em;
+    }
+
+    .scatter {
+      position: relative;
+      height: 115px;
+      border-bottom: 1px solid rgba(255, 255, 255, .28);
+      border-left: 1px solid rgba(255, 255, 255, .28);
+      background-image: linear-gradient(rgba(255, 255, 255, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .08) 1px, transparent 1px);
+      background-size: 25% 25%;
+    }
+
+    .dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border: 1px solid rgba(255, 255, 255, .7);
+      border-radius: 50%;
+      background: #c6e98d;
+      box-shadow: 0 0 10px rgba(209, 242, 143, .45);
+    }
+
+    .dot:nth-child(1) { left: 15%; bottom: 17%; }
+    .dot:nth-child(2) { left: 24%; bottom: 32%; width: 6px; height: 6px; }
+    .dot:nth-child(3) { left: 33%; bottom: 22%; background: #f4d39b; }
+    .dot:nth-child(4) { left: 47%; bottom: 45%; }
+    .dot:nth-child(5) { left: 55%; bottom: 34%; width: 6px; height: 6px; }
+    .dot:nth-child(6) { left: 68%; bottom: 62%; background: #f4d39b; }
+    .dot:nth-child(7) { left: 76%; bottom: 52%; }
+    .dot:nth-child(8) { left: 83%; bottom: 76%; width: 6px; height: 6px; }
+
+    .axis-labels {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 8px;
+      color: rgba(255, 255, 255, .62);
+      font-size: 8px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      align-items: start;
+      gap: 34px;
+      padding: 42px 64px 46px;
+      background: linear-gradient(180deg, #fff 0%, #fdfefc 100%);
+    }
+
+    .form-panel {
+      padding: 27px 29px 29px;
+      border: 1px solid #e8ede7;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(34, 58, 42, .035);
+    }
+
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .section-kicker::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--lime);
+      box-shadow: 0 0 0 3px #f0f7e5;
+      content: "";
+    }
+
+    .form-heading {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.025em;
+    }
+
+    .form-intro {
+      margin: 8px 0 25px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .field {
+      margin-bottom: 21px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      color: #33443a;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 56px;
+      padding: 0 58px 0 16px;
+      border: 1px solid #e1e7df;
+      border-radius: 13px;
+      outline: none;
+      color: var(--ink);
+      background: #f8faf7;
+      font: inherit;
+      font-size: 15px;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease;
+    }
+
+    input:focus {
+      border-color: #609779;
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(50, 120, 84, .1);
+      transform: translateY(-1px);
+    }
+
+    input::placeholder {
+      color: #aab3ac;
+    }
+
+    .unit {
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      color: #89958d;
+      font-size: 11px;
+      font-weight: 650;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .hint {
+      margin: 8px 0 0;
+      color: #8b968e;
+      font-size: 11px;
+    }
+
+    .submit {
+      display: flex;
+      width: 100%;
+      min-height: 54px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 27px;
+      border: 0;
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--green);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 16px rgba(35, 107, 79, .17);
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+
+    .submit:hover {
+      background: var(--green-dark);
+      box-shadow: 0 11px 22px rgba(35, 107, 79, .23);
+      transform: translateY(-2px);
+    }
+
+    .submit:focus-visible {
+      outline: 3px solid rgba(35, 107, 79, .28);
+      outline-offset: 3px;
+    }
+
+    .submit span {
+      color: var(--lime);
+      font-size: 18px;
+    }
+
+    .result-card {
+      align-self: start;
+      min-height: 284px;
+      padding: 25px;
+      border: 1px solid #e5ebe3;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(199, 237, 131, .32), transparent 43%),
+        linear-gradient(145deg, #f8faf6 0%, #f2f6ef 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9);
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-5px);
+      border-color: #cbdcc8;
+      box-shadow: 0 16px 34px rgba(34, 72, 48, .12), inset 0 1px 0 rgba(255, 255, 255, .9);
+    }
+
+    .result-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .result-icon {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      margin: 26px 0 15px;
+      place-items: center;
+      border: 1px solid #dbe8d6;
+      border-radius: 14px;
+      color: var(--green);
+      background: linear-gradient(145deg, #eff6e9, #e2efdc);
+      font-size: 20px;
+    }
+
+    .result-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 25px;
+      font-weight: 400;
+      letter-spacing: -.04em;
+      line-height: 1.2;
+    }
+
+    .result-copy {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .result-card.has-result {
+      border-color: #c7dec7;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(199, 237, 131, .42), transparent 43%),
+        #f5faf3;
+    }
+
+    .result-card.has-result .result-icon {
+      color: #fff;
+      background: var(--green);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .result-card {
+        transition: none;
+      }
+
+      .result-card:hover {
+        transform: none;
+      }
+    }
+
+    .error {
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      border: 1px solid #f0c9c2;
+      border-radius: 10px;
+      color: #8c3429;
+      background: #fff5f2;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 64px;
+      border-top: 1px solid #eef0ec;
+      color: #879189;
+      font-size: 10px;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px;
+      }
+
+      .topbar {
+        padding: 9px 2px 18px;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr) minmax(220px, .8fr);
+        gap: 12px;
+        padding: 42px 30px 38px;
+      }
+
+      .hero-art {
+        min-height: 190px;
+      }
+
+      .scatter-card {
+        padding: 15px;
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 34px 30px 38px;
+      }
+
+      .result-card {
+        min-height: 230px;
+      }
+
+      .result-icon:hover{
+        transform: scale(5.05);
+      }
+
+      footer {
+        padding: 18px 30px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 9px;
+      }
+
+      main {
+        border-radius: 20px;
+      }
+
+      .status {
+        font-size: 10px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 36px 23px 32px;
+      }
+
+      .hero-art {
+        min-height: 178px;
+        margin-top: 2px;
+      }
+
+      .scatter-card {
+        width: min(100%, 300px);
+      }
+
+      .content {
+        gap: 16px;
+        padding: 24px 18px 28px;
+      }
+
+      .form-panel {
+        padding: 23px 19px;
+      }
+
+      .result-card {
+        min-height: 218px;
+      }
+
+      footer {
+        flex-direction: column;
+        padding: 17px 23px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span> Customer Atlas - A Product by Om Satyawan Pathak</div>
+      <div class="status">Segmentation ready</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy-wrap">
+          <div class="eyebrow">Customer Clustering System</div>
+          <h1>See where your customer <span>belongs.</span></h1>
+          <p class="hero-copy">A clearer picture of every customer starts with two simple signals. Add their details to discover their closest customer segment.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit"></div>
+          <div class="scatter-card">
+            <div class="scatter-top">
+              <span>Customer map</span>
+              <span class="scatter-tag">Customer segments</span>
+            </div>
+            <div class="scatter">
+              <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+              <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+            </div>
+            <div class="axis-labels"><span>Income</span><span>Spending score</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="form-panel">
+          <div class="section-kicker">Customer profile</div>
+          <h2 class="form-heading">Customer details</h2>
+          <p class="form-intro">Enter the customer's annual income and spending score to find their segment.</p>
+
+          <form action="/predict" method="post">
+            <div class="field">
+              <label for="income">Annual income</label>
+              <div class="input-wrap">
+                <input id="income" name="income" type="number" min="0" step="any" placeholder="e.g. 65" value="{{ income|default('', true) }}" required>
+                <span class="unit">k$ / year</span>
+              </div>
+              <p class="hint">Enter the annual income in thousands of dollars.</p>
+            </div>
+
+            <div class="field">
+              <label for="spending">Spending score</label>
+              <div class="input-wrap">
+                <input id="spending" name="spending" type="number" min="1" max="100" step="any" placeholder="e.g. 72" value="{{ spending|default('', true) }}" required>
+                <span class="unit">1–100</span>
+              </div>
+              <p class="hint">Use the customer's score from 1 to 100.</p>
+            </div>
+
+            <button class="submit" type="submit">Find customer segment <span aria-hidden="true">↗</span></button>
+          </form>
+          {% if error %}
+            <p class="error" role="alert">{{ error }}</p>
+          {% endif %}
+        </div>
+
+        <aside class="result-card{% if prediction is not none %} has-result{% endif %}" aria-live="polite">
+          <p class="result-label">{% if prediction is not none %}Prediction complete{% else %}Your result{% endif %}</p>
+          <div class="result-icon" aria-hidden="true">{% if prediction is not none %}✓{% else %}⌖{% endif %}</div>
+          {% if prediction is not none %}
+            <h2 class="result-title">Cluster {{ prediction }}</h2>
+            <p class="result-copy">This customer is closest to cluster {{ prediction }} based on the model's income and spending patterns.</p>
+          {% else %}
+            <h2 class="result-title">Ready when you are</h2>
+            <p class="result-copy">Your predicted customer segment will appear here as soon as you submit the details.</p>
+          {% endif %}
+        </aside>
+      </section>
+
+      <footer>
+        <span>A project by Om Satyawan Pathak</span>
+        <span>Income × Spending patterns</span>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
