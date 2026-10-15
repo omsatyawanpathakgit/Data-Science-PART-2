@@ -10,7 +10,7 @@ from werkzeug.exceptions import HTTPException
 
 # On Vercel the project root is the working directory
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_DIR = PROJECT_DIR / "frontend"
+FRONTEND_DIR = PROJECT_DIR / "public"
 
 MODEL_PATH = PROJECT_DIR / "best_revenue_prediction_model.pkl"
 PREPROCESSING_PATH = PROJECT_DIR / "data_preprocessing.pkl"
