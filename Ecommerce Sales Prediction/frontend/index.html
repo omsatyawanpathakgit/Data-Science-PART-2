@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f5f4ef">
     <title>Ecommerce Revenue Forecast</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <script src="/static/script.js" defer></script>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/script.js" defer></script>
   </head>
   <body>
     <main class="page-shell">
@@ -15,7 +15,10 @@
           <span class="brand-mark" aria-hidden="true">E</span>
           <span>Commerce<span class="brand-muted"> / intelligence</span></span>
         </a>
-        <span class="model-status"><span aria-hidden="true"></span> Revenue model ready</span>
+        <span id="model-status" class="model-status" role="status" aria-live="polite">
+          <span class="model-status-indicator" aria-hidden="true"></span>
+          <span id="model-status-text">Connecting to revenue model</span>
+        </span>
       </header>
 
       <section class="intro" aria-labelledby="page-title">

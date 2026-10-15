@@ -4,8 +4,30 @@ const resultCard = document.querySelector(".result-card");
 const resultValue = document.querySelector("#result-value");
 const resultMessage = document.querySelector("#result-message");
 const resultStatus = document.querySelector("#result-status");
+const modelStatus = document.querySelector("#model-status");
+const modelStatusText = document.querySelector("#model-status-text");
 const orderDateInput = form.elements.order_date;
 const orderDateError = document.querySelector("#order-date-error");
+const predictionEndpoint = "/api/app";
+
+async function checkModelStatus() {
+  try {
+    const response = await fetch(predictionEndpoint, {
+      headers: { Accept: "application/json" },
+    });
+    const result = await response.json();
+
+    if (!response.ok || result.model_loaded !== true) {
+      throw new Error(result.error || "The revenue model is unavailable.");
+    }
+
+    modelStatus.classList.remove("is-unavailable");
+    modelStatusText.textContent = "Revenue model ready";
+  } catch {
+    modelStatus.classList.add("is-unavailable");
+    modelStatusText.textContent = "Prediction service unavailable";
+  }
+}
 
 function isPastOrderDate(value) {
   if (!value) return false;
@@ -26,6 +48,7 @@ function updateOrderDateError() {
 
 orderDateInput.addEventListener("input", updateOrderDateError);
 orderDateInput.addEventListener("change", updateOrderDateError);
+checkModelStatus();
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -60,7 +83,7 @@ form.addEventListener("submit", async (event) => {
   resultStatus.textContent = "Prediction in progress";
 
   try {
-    const response = await fetch("/predict", {
+    const response = await fetch(predictionEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

@@ -8,9 +8,10 @@ import pandas as pd
 from flask import Flask, jsonify, request, send_from_directory
 from werkzeug.exceptions import HTTPException
 
-
+# On Vercel the project root is the working directory
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = PROJECT_DIR / "frontend"
+
 MODEL_PATH = PROJECT_DIR / "best_revenue_prediction_model.pkl"
 PREPROCESSING_PATH = PROJECT_DIR / "data_preprocessing.pkl"
 
@@ -18,10 +19,11 @@ PRODUCT_CATEGORIES = {"Beauty", "Clothing", "Electronics", "Home"}
 REGIONS = {"East", "North", "South", "West"}
 PAYMENT_METHODS = {"Card", "COD", "Wallet"}
 
-app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="/static")
+app = Flask(__name__)
 model = joblib.load(MODEL_PATH)
 preprocessing = joblib.load(PREPROCESSING_PATH)
 feature_columns = preprocessing["feature_columns"]
+
 model_feature_columns = model.get_booster().feature_names
 if model_feature_columns != feature_columns:
     raise RuntimeError(
@@ -57,6 +59,22 @@ def index():
     return send_from_directory(FRONTEND_DIR, "index.html")
 
 
+@app.get("/styles.css")
+def styles():
+    return send_from_directory(FRONTEND_DIR, "styles.css")
+
+
+@app.get("/script.js")
+def script():
+    return send_from_directory(FRONTEND_DIR, "script.js")
+
+
+@app.get("/api/app")
+def model_status():
+    return jsonify(status="ready", model_loaded=True)
+
+
+@app.post("/api/app")
 @app.post("/predict")
 def predict():
     payload = request.get_json()

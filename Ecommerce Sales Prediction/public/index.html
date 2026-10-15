@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f4ef">
+    <title>Ecommerce Revenue Forecast</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/script.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Ecommerce Forecast home">
+          <span class="brand-mark" aria-hidden="true">E</span>
+          <span>Commerce<span class="brand-muted"> / intelligence</span></span>
+        </a>
+        <span id="model-status" class="model-status" role="status" aria-live="polite">
+          <span class="model-status-indicator" aria-hidden="true"></span>
+          <span id="model-status-text">Connecting to revenue model</span>
+        </span>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">SALES PLANNING · PREDICTION</p>
+        <h1 id="page-title">See what an order<br><span>could earn.</span></h1>
+        <p class="intro-copy">Enter a few order details to get an instant revenue estimate from the project's trained model.</p>
+      </section>
+
+      <section class="workspace" aria-label="Revenue prediction">
+        <form id="prediction-form" class="form-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">ORDER DETAILS</p>
+              <h2>Forecast future sales</h2>
+              <h6>A Product by Om Satyawan Pathak</h6>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Product category</span>
+              <select name="product_category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option>Beauty</option>
+                <option>Clothing</option>
+                <option>Electronics</option>
+                <option>Home</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Region</span>
+              <select name="region" required>
+                <option value="" disabled selected>Select a region</option>
+                <option>East</option>
+                <option>North</option>
+                <option>South</option>
+                <option>West</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Payment method</span>
+              <select name="payment_method" required>
+                <option value="" disabled selected>Select a method</option>
+                <option>Card</option>
+                <option>COD</option>
+                <option>Wallet</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Order date</span>
+              <input type="date" name="order_date" aria-describedby="order-date-error" required>
+              <span id="order-date-error" class="field-hint field-hint-error" aria-live="polite" hidden>Order dates of past not allowed. kindly add current date.</span>
+            </label>
+
+            <label class="field">
+              <span>Quantity</span>
+              <input type="number" name="quantity" min="1" step="1" placeholder="e.g. 3" required>
+            </label>
+
+            <label class="field">
+              <span>Unit price</span>
+              <span class="input-with-suffix">
+                <input type="number" name="unit_price" min="0" step="0.01" placeholder="e.g. 249.99" required>
+                <span>per item</span>
+              </span>
+            </label>
+
+            <label class="field field-wide">
+              <span>Discount</span>
+              <span class="input-with-suffix">
+                <input type="number" name="discount" min="0" max="1" step="0.01" placeholder="e.g. 0.78" required>
+                <span>0–1</span>
+              </span>
+              <span class="field-hint">Enter a decimal from 0 to 1 (for example, 0.78 means 78%).</span>
+            </label>
+          </div>
+
+          <button class="submit-button" type="submit">
+            <span>Calculate predicted revenue</span>
+            <span class="button-arrow" aria-hidden="true">↗</span>
+          </button>
+        </form>
+
+        <aside class="result-card" aria-live="polite" aria-atomic="true">
+          <div class="result-orbit orbit-one" aria-hidden="true"></div>
+          <div class="result-orbit orbit-two" aria-hidden="true"></div>
+          <div class="result-content">
+            <span class="result-icon" aria-hidden="true">↗</span>
+            <p class="eyebrow">YOUR ESTIMATE</p>
+            <h2 id="result-value">—</h2>
+            <p id="result-message" class="result-message">Your forecast will appear here once you enter the order details.</p>
+          </div>
+          <div class="result-footer">
+            <span class="result-dot" aria-hidden="true"></span>
+            <span id="result-status">Waiting for order details</span>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="page-footer">
+        <span>ESTIMATE BASED ON THE PROVIDED ORDER DETAILS</span>
+        <span>ECOMMERCE SALES PREDICTION</span>
+        <span>A Product by Om Satyawan Pathak</span>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -18,7 +18,7 @@
 }
 
 body {
-  min-width: 320px;
+  min-width: 280px;
   min-height: 100vh;
   margin: 0;
   background:
@@ -80,15 +80,25 @@ select {
   gap: 9px;
   color: #66736b;
   font-size: 12px;
+  transition: color 150ms ease;
 }
 
-.model-status > span,
+.model-status-indicator,
 .result-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: #64a780;
   box-shadow: 0 0 0 4px rgba(100, 167, 128, 0.13);
+}
+
+.model-status.is-unavailable {
+  color: #a44839;
+}
+
+.model-status.is-unavailable .model-status-indicator {
+  background: #d56c59;
+  box-shadow: 0 0 0 4px rgba(213, 108, 89, 0.13);
 }
 
 .intro {
@@ -224,6 +234,14 @@ h1 span {
 .field select:focus {
   border-color: #79a58f;
   box-shadow: 0 0 0 3px rgba(54, 117, 85, 0.1);
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.submit-button:focus-visible,
+.brand:focus-visible {
+  outline: 2px solid #4f896e;
+  outline-offset: 3px;
 }
 
 .input-with-suffix {
@@ -437,6 +455,10 @@ h1 span {
     font-size: 10px;
   }
 
+  .brand-muted {
+    display: none;
+  }
+
   .intro {
     padding: 40px 0 30px;
   }
@@ -459,7 +481,9 @@ h1 span {
   }
 
   .page-footer {
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
     font-size: 8px;
   }
 }

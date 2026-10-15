@@ -1,0 +1,11 @@
+.venv/
+venv/
+__pycache__/
+.vercel/
+.git/
+.ipynb_checkpoints/
+*.ipynb
+*.pdf
+*.csv
+mlflow.db
+.env*

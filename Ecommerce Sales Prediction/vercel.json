@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/app.py": {
+      "maxDuration": 30,
+      "includeFiles": "{best_revenue_prediction_model.pkl,data_preprocessing.pkl}",
+      "excludeFiles": "{**/*.ipynb,**/*.pdf,ecommerce_sales_dataset.csv,mlflow.db,.venv/**,frontend/**}"
+    }
+  }
+}
